@@ -4,7 +4,9 @@
 
 <li>
     <span class="@GlyphStyle" @onclick="@OnExpandCollapse_Clicked" @onclick:stopPropagation>@TempGlyphName</span>
-    <span @onclick="@OnSelected_Clicked" @onclick:stopPropagation>@Tree.NodeTemplate(this.Node)</span>
+    <span @onclick="@OnSelected_Clicked" @onclick:stopPropagation
+          @oncontextmenu="@OnContextMenu_Clicked"
+          @ondblclick="@OnDoubleClick">@Tree.NodeTemplate(this.Node)</span>
     @if (this.IsSelected)
     {
         <span>SELECTED</span>

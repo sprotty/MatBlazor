@@ -5,7 +5,7 @@
 
 
 <CascadingValue Value="@this">
-    <ul class="lt-tree-view">
+    <ul class="lt-tree-view" @oncontextmenu:stopPropagation>
         @foreach (TNode rootNode in this.RootNodes)
         {
             <MatTreeNode @key="@rootNode" TNode="TNode"

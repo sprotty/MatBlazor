@@ -837,7 +837,7 @@
             }
             ]]></example>
         </member>
-        <member name="P:MatBlazor.MatTreeView`1.ExpandStateChanged">
+        <member name="P:MatBlazor.MatTreeView`1.ExpandedNodesChanged">
             <summary>
             An event raised when the expanded state of a node changes
             </summary>
@@ -845,6 +845,11 @@
         <member name="P:MatBlazor.MatTreeView`1.SelectedNodeChanged">
             <summary>
             An event raised when the selected node changes
+            </summary>
+        </member>
+        <member name="P:MatBlazor.MatTreeView`1.DoubleClicked">
+            <summary>
+            An event raised when the selected node is double clicked
             </summary>
         </member>
         <member name="M:MatBlazor.MatTreeView`1.EnsureSelectedNodeIsVisible">
@@ -880,20 +885,25 @@
             <param name="parentNode">The node we want to know the expanded state for</param>
             <returns>The expanded state of the node</returns>
         </member>
-        <member name="T:MatBlazor.ExpandedStateChangedArgs`1">
+        <member name="T:MatBlazor.ExpandedNodesChangedArgs`1">
             <summary>
             Event arguments passed when a node expanded state changes
             </summary>
             <typeparam name="TNode"></typeparam>
         </member>
-        <member name="P:MatBlazor.ExpandedStateChangedArgs`1.Node">
+        <member name="P:MatBlazor.ExpandedNodesChangedArgs`1.ExpandedNodes">
+            <summary>
+            a list of all the expanded nodes (includes that change that has just taken place)
+            </summary>
+        </member>
+        <member name="P:MatBlazor.ExpandedNodesChangedArgs`1.Node">
             <summary>
             The node that's expanded state has changed
             </summary>
         </member>
-        <member name="P:MatBlazor.ExpandedStateChangedArgs`1.NewState">
+        <member name="P:MatBlazor.ExpandedNodesChangedArgs`1.NewState">
             <summary>
-            the new expanded state
+            the new expanded state of <see cref="P:MatBlazor.ExpandedNodesChangedArgs`1.Node"/>
             </summary>
         </member>
         <member name="M:MatBlazor.LinqExtensions.FindIndex``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">

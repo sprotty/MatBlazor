@@ -34,19 +34,24 @@ namespace MatBlazor
     /// Event arguments passed when a node expanded state changes
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
-    public class ExpandedStateChangedArgs<TNode>
+    public class ExpandedNodesChangedArgs<TNode>
     {
-        internal ExpandedStateChangedArgs(TNode node, bool newState)
+        internal ExpandedNodesChangedArgs(IEnumerable<TNode> expandedNodes, TNode node, bool newState)
         {
+            this.ExpandedNodes = expandedNodes;
             this.Node = node;
             this.NewState = newState;
         }
+        /// <summary>
+        /// a list of all the expanded nodes (includes that change that has just taken place)
+        /// </summary>
+        public IEnumerable<TNode> ExpandedNodes { get; }
         /// <summary>
         /// The node that's expanded state has changed
         /// </summary>
         public TNode Node { get; }
         /// <summary>
-        /// the new expanded state
+        /// the new expanded state of <see cref="Node"/>
         /// </summary>
         public bool NewState { get; }
     }

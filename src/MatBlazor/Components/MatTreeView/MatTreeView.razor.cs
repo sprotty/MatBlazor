@@ -14,7 +14,6 @@ namespace MatBlazor
     public partial class MatTreeView<TNode>
         where TNode : class
     {
-        private Dictionary<TNode, bool> _expandedNodes = new Dictionary<TNode, bool>();
         private IEnumerable<TNode> _rootNodes = null;
 
         /// <summary>
@@ -47,6 +46,10 @@ namespace MatBlazor
                 _rootNodes = value.ToArray();
             }
         }
+
+        [Parameter]
+        public ICollection<TNode> ExpandedNodes { get; set; } = new HashSet<TNode>();
+
 
         /// <summary>
         /// The selected item in the tree
@@ -161,12 +164,17 @@ namespace MatBlazor
         /// An event raised when the expanded state of a node changes
         /// </summary>
         [Parameter]
-        public EventCallback<ExpandedStateChangedArgs<TNode>> ExpandStateChanged { get; set; }
+        public EventCallback<ExpandedNodesChangedArgs<TNode>> ExpandedNodesChanged { get; set; }
         /// <summary>
         /// An event raised when the selected node changes
         /// </summary>
         [Parameter]
         public EventCallback<TNode> SelectedNodeChanged { get; set; }
+        /// <summary>
+        /// An event raised when the selected node is double clicked
+        /// </summary>
+        [Parameter]
+        public EventCallback<TNode> DoubleClicked { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -182,23 +190,22 @@ namespace MatBlazor
             {
                 if (this.IsNodeExpanded(pathNode) == false)
                 {
-                    this._expandedNodes[pathNode] = true;
-                    await ExpandStateChanged.InvokeAsync(new ExpandedStateChangedArgs<TNode>(pathNode, true));
+                    this.ExpandedNodes.Add(pathNode);
+                    await ExpandedNodesChanged.InvokeAsync(new ExpandedNodesChangedArgs<TNode>(this.ExpandedNodes, pathNode, true));
                 }
             }
 
             await base.OnParametersSetAsync();
         }
 
-        protected async override Task OnInitializedAsync()
-        {            
-
-            await base.OnInitializedAsync();
-        }
+        //protected async override Task OnInitializedAsync()
+        //{
+        //    await base.OnInitializedAsync();
+        //}
 
         internal bool IsNodeSelected(TNode node)
         {
-            return node == this.SelectedNode;
+            return node.Equals(this.SelectedNode);
         }
         internal bool IsNodeExpanded(TNode node)
         {
@@ -207,16 +214,18 @@ namespace MatBlazor
                 return IsNodeExpandedCallback(node);
 
             // not call back, so manage the sate ourselves
-            if (this._expandedNodes.TryGetValue(node, out bool state))
-                return state;
-            else
-                return false;
+            bool result = this.ExpandedNodes.Contains(node);
+            return result;
         }
 
-        internal async Task SetExpandedNodeAsync(TNode node, bool expanded)
+        internal async Task SetExpandedNodesAsync(TNode node, bool expanded)
         {
-            this._expandedNodes[node] = expanded;
-            await ExpandStateChanged.InvokeAsync(new ExpandedStateChangedArgs<TNode>(node, expanded));
+            if (expanded)
+                this.ExpandedNodes.Add(node);
+            else
+                this.ExpandedNodes.Remove(node);
+
+            await ExpandedNodesChanged.InvokeAsync(new ExpandedNodesChangedArgs<TNode>(this.ExpandedNodes, node, expanded));
             await EnsureSelectedNodeIsVisible();
             StateHasChanged();
         }
@@ -256,7 +265,7 @@ namespace MatBlazor
 
             foreach (TNode node in nodes)
             {
-                if (node == this.SelectedNode)
+                if (node.Equals(this.SelectedNode))
                 {
                     return true;
                 }
@@ -276,6 +285,13 @@ namespace MatBlazor
         {
             this.SelectedNode = node;
             await SelectedNodeChanged.InvokeAsync(node);
+            StateHasChanged();
+        }
+
+        internal async Task OnDoubleClickAsync(TNode node)
+        {
+            await this.SetSelectedNodeAsync(node);
+            await DoubleClicked.InvokeAsync(node);
             StateHasChanged();
         }
 

@@ -32,7 +32,7 @@ namespace MatBlazor
         }
         private Task SetExpanded(bool isExpanded)
         {
-            return this.Tree.SetExpandedNodeAsync(this.Node, isExpanded);
+            return this.Tree.SetExpandedNodesAsync(this.Node, isExpanded);
         }
 
         private IEnumerable<TNode> ChildNodes
@@ -117,6 +117,17 @@ namespace MatBlazor
         {
             return this.Tree.SetSelectedNodeAsync(this.Node);
         }
+        private Task OnContextMenu_Clicked(MouseEventArgs args)
+        {
+            return this.Tree.SetSelectedNodeAsync(this.Node);
+        }
+        private Task OnDoubleClick(MouseEventArgs args)
+        {
+            return this.Tree.OnDoubleClickAsync(this.Node);
+        }
+
+        
+
     }
 }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
