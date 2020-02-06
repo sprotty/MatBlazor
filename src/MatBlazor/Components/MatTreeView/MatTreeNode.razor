@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @typeparam TNode
 
-<li>
+<li tabindex="0">
     <span class="@GlyphStyle" @onclick="@OnExpandCollapse_Clicked" @onclick:stopPropagation>@TempGlyphName</span>
     <span @onclick="@OnSelected_Clicked" @onclick:stopPropagation
           @oncontextmenu="@OnContextMenu_Clicked"
